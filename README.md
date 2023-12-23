@@ -62,28 +62,33 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre machine.
 
 ### Dictionnaire des Données
 
-| ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
 | Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
 | Terrains           | id_terrain      | N    | Oui           |        | Identifiant unique du terrain                  |
 | Nom                | nom             | A    | Oui           | 1      | A, B, C, D                                     |
 | Lieu               | lieu            | A    | Oui           | 100    | Lieu du terrain                                |
 | Disponibilité      | disponible      | B    | Oui           |        | true, false                                    |
+
+| Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
 | Créneaux           | id_creneau      | N    | Oui           |        | Identifiant unique du créneau                  |
 | Date de début      | debut           | D    | Oui           |        | Date de début(ex: 2023-12-25 20:00:00)         |
 | Date de fin        | fin             | D    | Oui           |        | Date de fin(ex: 2023-12-25 20:45:00)           |
 | Jour               | jour            | A    | Oui           |        | lundi, mardi, mercredi, jeudi, vendredi, samedi|
+
+| Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
 | Adhérents          | id_adherent     | N    | Oui           |        | Identifiant unique de l'adhérent               |
 | Pseudo             | pseudo          | A    | Oui           | 50     | Pseudo unique par adhérent                     |
 | Role               | administrateur  | B    | Oui           |        | true, false                                    |
+
+| Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
 | Réservations       | id_reservation  | N    | Oui           |        | Identifiant unique de la réservation           |
 | Numéro             | numero          | N    | Oui           |        | Numéro de réservation unique pour l'adhérent   |
 | Date et Heure      | date            | D    | Oui           |        | Date et heure de la réservation                |
 | Statut Réservation | statut          | A    | Oui           |        | to_confirm, confirmed, canceled                |
-| ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
+
 
 
 ## Tableau Récapitulatif des Ressources
@@ -103,14 +108,20 @@ Réserver un Terrain | `/terrains/{id-terrain}/reservations` | POST | N/A | Effe
 Liste des Réservations d'un Terrain | `/terrains/{id-terrain}/reservations` | GET | N/A | Liste des réservations pour un terrain spécifique
 Annuler une Réservation | `/terrains/{id-terrain}/reservations/{id-reservation}` | DELETE | N/A | Annuler une réservation pour un terrain spécifique
 
+Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
+------------------- | --- | ------------- | --------------------------- | ------------ |
 Liste des Adhérents | `/adherents` | GET | N/A | Liste des adhérents |
 Détails d'un Adhérent | `/adherents/{pseudo}` | GET | N/A | Informations détaillées sur un adhérent |
 Liste des Réservations d'un Adhérent | `/adherents/{pseudo}/reservations` | GET | N/A | Liste des réservations d'un adhérent
 
+Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
+------------------- | --- | ------------- | --------------------------- | ------------ |
 Liste des Créneaux | `/creneaux` | GET | N/A | Liste des Créneaux |
 Détails d'un Créneau | `/creneaux/{heure-debut}` | GET | N/A | Informations détaillées sur un créneau |
 Liste des Réservations d'un Créneau | `/creneaux/{heure-debut}/reservations` | GET | N/A | Liste des réservations d'un créneau
 
+Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
+------------------- | --- | ------------- | --------------------------- | ------------ |
 Liste des Réservations | `/reservations` | GET | N/A | Liste des Réservations |
 
 
