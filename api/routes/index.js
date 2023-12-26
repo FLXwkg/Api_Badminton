@@ -1,14 +1,18 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../db');
+var hal = require('../hal')
+
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
-
-  // #swagger.summary = "Page d'accueil"
-
-  const conn = await db.mysql.createConnection(db.dsn);
-
+  res.send({
+    "_links": {
+      "self": hal.halLinkObject('/'),
+      "terrains": hal.halLinkObject('/terrains')
+    },
+    'description' : 'Un système de réservation de terrains de badminton'
+  })
+/*
   try {
     
     const [rows] = await conn.execute('SELECT * FROM User');
@@ -24,7 +28,7 @@ router.get('/', async function (req, res, next) {
     console.error('Error connecting: ' + error.stack);
     res.status(500).json({ "msg": "Nous rencontrons des difficultés, merci de réessayer plus tard." });
 
-  }
+  }*/
 });
 
 module.exports = router;

@@ -6,10 +6,21 @@ var logger = require('morgan');
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('./swagger_output.json')
 var indexRouter = require('./routes/index');
-
+var terrainRouter = require('./routes/terrains');
+var http = require('http');
 
 var app = express();
+var port =  3000;
+app.set('port', port);
 
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -24,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  * Enregistrement des routes
  */
 app.use('/', indexRouter);
+app.use('/', terrainRouter);
 
 
 /**
