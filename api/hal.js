@@ -29,17 +29,17 @@ function halLinkObject(url, type = '', name = '', templated = false, deprecation
  * @param {*} concertData Données brutes d'un concert
  * @returns un Ressource Object Concert (spec HAL)
  */
-function mapConcertoResourceObject(concertData, baseURL) {
+function mapTerrainToResourceObject(terrainData, baseURL) {
     return {
         "_links": [{
-            // A compléter
-            // "self": halLinkObject(...),
-            // "reservation": halLinkObject(...)
+            "self": halLinkObject(baseURL + '/terrains' + '/' + terrainData.nom, 'string'),
+            "reservation": halLinkObject(baseURL + '/terrains' + '/' + terrainData.nom + '/reservation', 'string')
         }],
 
-        //Données d'un concert à ajouter ici...
+        "nom": terrainData.nom,
+        "disponible": terrainData.disponible,
     }
 }
 
 
-module.exports = { halLinkObject, mapConcertoResourceObject };
+module.exports = { halLinkObject, mapTerrainToResourceObject };
