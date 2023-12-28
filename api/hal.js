@@ -49,15 +49,15 @@ function mapTerrainToResourceObject(terrainData, baseURL) {
 function mapCreneauToResourceObject(creneauData, baseURL) {
     return {
         "_links": [{
-            "self": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id, 'string'),
-            "reservation": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id + '/reservation', 'string'),
-            "creneau": halLinkObject('/creneaux' + '/' + creneauData.id, 'string')
+            "self": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id_creneau, 'string'),
+            "reservation": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id_creneau + '/reservation', 'string'),
+            "creneau": halLinkObject('/creneaux' + '/' + creneauData.id_creneau, 'string')
         }],
 
         "Heure de début": creneauData.heure_debut,
         "Heure de fin": creneauData.heure_fin,
         "Jour": creneauData.jour,
-        "disponible": creneauData.disponible,
+        "disponible": creneauData.creneau_disponible,
     }
 }
 
