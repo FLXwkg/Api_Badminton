@@ -4,9 +4,13 @@ const router = express.Router();
 const hal = require('../hal');
 const pool = require('../db'); // Import the db.js file
 const validateTerrainName = require('../middlewares/validateTerrainName');
+const validateCreneauId = require('../middlewares/validateCreneauId');
+const validatePseudo = require('../middlewares/validatePseudo');
 
 /* GET terrains page. */
-router.get('/terrains', async function (req, res, next) {
+router.get('/terrains', 
+validatePseudo,
+async function (req, res, next) {
   try {
     const disponible = req.query.disponible || 1;
     const connection = await pool.getConnection();
@@ -38,7 +42,10 @@ router.get('/terrains', async function (req, res, next) {
   }
 });
 
-router.get('/terrains/:name', validateTerrainName, async function (req, res, next) {
+router.get('/terrains/:name', 
+validateTerrainName,
+validatePseudo, 
+async function (req, res, next) {
   const terrainName = req.params.name.toLowerCase();
 
   try {
@@ -70,7 +77,10 @@ router.get('/terrains/:name', validateTerrainName, async function (req, res, nex
   }
 });
 
-router.get('/terrains/:name/creneaux', validateTerrainName, async function (req, res, next) {
+router.get('/terrains/:name/creneaux', 
+validateTerrainName, 
+validatePseudo,
+async function (req, res, next) {
   const terrainName = req.params.name.toLowerCase();
   const disponible = req.query.disponible || 1;
 
@@ -107,7 +117,11 @@ router.get('/terrains/:name/creneaux', validateTerrainName, async function (req,
   }
 });
 
-router.get('/terrains/:name/creneaux/:id', validateTerrainName, async function (req, res, next) {
+router.get('/terrains/:name/creneaux/:id', 
+validateTerrainName, 
+validateCreneauId, 
+validatePseudo,
+async function (req, res, next) {
   const terrainName = req.params.name.toLowerCase();
   const creneauId = req.params.id;
   const disponible = req.query.disponible || 1;
@@ -132,6 +146,41 @@ router.get('/terrains/:name/creneaux/:id', validateTerrainName, async function (
     res.set('Content-Type', 'application/hal+json');
     res.status(200);
     res.json(ressourceObject);
+
+    // Release the connection back to the pool
+    connection.release();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ "msg": "Nous rencontrons des difficultés, merci de réessayer plus tard." });
+  }
+});
+
+router.post('/terrains/:name/creneaux/:id/reservation', 
+validateTerrainName, 
+validateCreneauId, 
+validatePseudo,
+async function (req, res, next) {
+  const terrainName = req.params.name.toLowerCase();
+  const creneauId = req.params.id;
+  const pseudo = req.query.pseudo || '';   
+
+  try {
+    // Get a connection from the pool
+    const connection = await pool.getConnection();
+    const sql = 'SELECT id FROM `adherent` WHERE pseudo = ?;';
+
+    const [row] = await connection.query(sql, pseudo);
+
+    // Vérifier si le terrain existe
+    if (row.length === 0) {
+      let errorMsg = "Pseudo non trouvé";
+      res.status(404).json({ "msg": errorMsg });
+      return;
+    }
+    const sqlpost = 'INSERT INTO `reservation`(id_creneau, id_adherent) VALUES (?, ?);'
+    // Execute the query to retrieve the specific terrain by name
+    const [rows] = await connection.query(sqlpost, [creneauId, row[0].id]);
+  
 
     // Release the connection back to the pool
     connection.release();
