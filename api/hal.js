@@ -26,14 +26,14 @@ function halLinkObject(url, type = '', name = '', templated = false, deprecation
 
 /**
  * Retourne une représentation Ressource Object (HAL) d'un concert
- * @param {*} concertData Données brutes d'un concert
+ * @param {*} terrainData Données brutes d'un concert
  * @returns un Ressource Object Concert (spec HAL)
  */
 function mapTerrainToResourceObject(terrainData, baseURL) {
     return {
         "_links": [{
             "self": halLinkObject(baseURL + '/terrains' + '/' + terrainData.nom, 'string'),
-            "reservation": halLinkObject(baseURL + '/terrains' + '/' + terrainData.nom + '/reservation', 'string')
+            "creneaux": halLinkObject(baseURL + '/terrains' + '/' + terrainData.nom + '/creneaux', 'string')
         }],
 
         "nom": terrainData.nom,
@@ -41,5 +41,25 @@ function mapTerrainToResourceObject(terrainData, baseURL) {
     }
 }
 
+/**
+ * Retourne une représentation Ressource Object (HAL) d'un concert
+ * @param {*} creneauData Données brutes d'un concert
+ * @returns un Ressource Object Concert (spec HAL)
+ */
+function mapCreneauToResourceObject(creneauData, baseURL) {
+    return {
+        "_links": [{
+            "self": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id, 'string'),
+            "reservation": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id + '/reservation', 'string'),
+            "creneau": halLinkObject('/creneaux' + '/' + creneauData.id, 'string')
+        }],
 
-module.exports = { halLinkObject, mapTerrainToResourceObject };
+        "Heure de début": creneauData.heure_debut,
+        "Heure de fin": creneauData.heure_fin,
+        "Jour": creneauData.jour,
+        "disponible": creneauData.disponible,
+    }
+}
+
+
+module.exports = { halLinkObject, mapTerrainToResourceObject, mapCreneauToResourceObject };
