@@ -7,6 +7,7 @@ const validateTerrainName = require('../middlewares/validateTerrainName');
 const validateCreneauId = require('../middlewares/validateCreneauId');
 const validatePseudo = require('../middlewares/validatePseudo');
 const validateDisponible = require('../middlewares/validateDisponible');
+const validateReservationId = require('../middlewares/validateReservationId');
 
 /* GET terrains page. */
 router.get('/terrains', 
@@ -152,7 +153,6 @@ validateTerrainName,
 validateCreneauId, 
 validatePseudo,
 async function (req, res, next) {
-  const terrainName = req.params.name.toLowerCase();
   const creneauId = req.params.id;
   const pseudo = req.query.pseudo || '';   
 
@@ -169,13 +169,44 @@ async function (req, res, next) {
     }
     const sqlpost = 'INSERT INTO `reservation`(id_creneau, id_adherent) VALUES (?, ?);'
 
-    const [rows] = await connection.query(sqlpost, [creneauId, row[0].id]);
+    await connection.query(sqlpost, [creneauId, row[0].id]);
   
     connection.release();
+    res.json({ "msg": "Reservation added successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ "msg": "Nous rencontrons des difficultés, merci de réessayer plus tard." });
   }
+});
+
+router.delete('/terrains/:name/creneaux/:id/reservation/:reservationId',
+validateTerrainName,
+validateCreneauId,
+validateReservationId,
+async function (req, res) {
+    const reservationId = req.params.reservationId;
+
+    try {
+        const connection = await pool.getConnection();
+
+        const checkReservationSql = 'SELECT * FROM `reservation` WHERE id = ?;';
+        const [reservationRows] = await connection.query(checkReservationSql, [reservationId]);
+
+        if (reservationRows.length === 0) {
+            res.status(404).json({ "msg": "Reservation not found" });
+            return;
+        }
+
+        const deleteReservationSql = 'DELETE FROM `reservation` WHERE id = ?;';
+        await connection.query(deleteReservationSql, [reservationId]);
+
+        connection.release();
+
+        res.json({ "msg": "Reservation deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ "msg": "An error occurred while deleting the reservation" });
+    }
 });
   
 module.exports = router;
