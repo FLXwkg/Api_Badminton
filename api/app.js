@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var terrainRouter = require('./routes/terrains');
 var creneauRouter = require('./routes/creneaux');
 var adherentRouter = require('./routes/adherents');
+var adminRouter = require('./routes/admin');
 var http = require('http');
 
 var app = express();
@@ -40,6 +41,7 @@ app.use('/', indexRouter);
 app.use('/', terrainRouter);
 app.use('/', creneauRouter);
 app.use('/', adherentRouter);
+app.use('/', adminRouter);
 
 
 /**

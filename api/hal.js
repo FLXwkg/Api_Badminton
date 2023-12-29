@@ -33,6 +33,7 @@ function mapTerrainToResourceObject(terrainData, baseURL) {
     return {
         "_links": [{
             "self": halLinkObject(baseURL + '/terrains' + '/' + terrainData.nom, 'string'),
+            "terrains": halLinkObject(baseURL + '/terrains' , 'string'),
             "creneaux": halLinkObject(baseURL + '/terrains' + '/' + terrainData.nom + '/creneaux', 'string')
         }],
 
@@ -46,12 +47,10 @@ function mapTerrainToResourceObject(terrainData, baseURL) {
  * @param {*} creneauData Données brutes d'un concert
  * @returns un Ressource Object Concert (spec HAL)
  */
-function mapCreneauToResourceObject(creneauData, baseURL) {
+function mapCreneauSelfToResourceObject(creneauData, baseURL) {
     return {
         "_links": [{
             "self": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id_creneau, 'string'),
-            "reservation": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id_creneau + '/reservation', 'string'),
-            "creneau": halLinkObject('/creneaux' + '/' + creneauData.id_creneau, 'string')
         }],
 
         "Heure de début": creneauData.heure_debut,
@@ -66,10 +65,12 @@ function mapCreneauToResourceObject(creneauData, baseURL) {
  * @param {*} creneauData Données brutes d'un concert
  * @returns un Ressource Object Concert (spec HAL)
  */
-function mapCreneauSelfToResourceObject(creneauData, baseURL) {
+function mapCreneauToResourceObject(creneauData, baseURL) {
     return {
         "_links": [{
             "self": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id, 'string'),
+            "reservation": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id_creneau + '/reservation', 'string'),
+            "creneaux": halLinkObject(baseURL + '/creneaux' , 'string')
         }],
 
         "Heure de début": creneauData.heure_debut,
@@ -89,6 +90,7 @@ function mapAdherentToResourceObject(adherentData, baseURL) {
     return {
         "_links": [{
             "self": halLinkObject(baseURL + '/adherent' + '/' + adherentData.id, 'string'),
+            "adherents": halLinkObject(baseURL + '/adherents' , 'string')
         }],
 
         "Pseudo": adherentData.pseudo,

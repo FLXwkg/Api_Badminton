@@ -30,6 +30,9 @@ async function (req, res, next) {
     }
 
     const ressourceObject = {
+      "_links": {
+          "self": { "href": `/creneaux`},
+      },
       "_embedded": {
         "creneaux": rows.map(row => hal.mapCreneauSelfToResourceObject(row, req.baseUrl))
       }
@@ -63,8 +66,9 @@ async function (req, res, next) {
     }
 
     const ressourceObject = {
-      "_embedded": {
-        "creneau": rows.map(row => hal.mapCreneauSelfToResourceObject(row, req.baseUrl))
+      "_links": {
+          "self": { "href": `/creneaux/${req.params.id}`},
+          "creneau": hal.mapCreneauToResourceObject(rows[0], req.baseUrl)
       }
     };
 

@@ -27,6 +27,9 @@ async function (req, res, next) {
       }
 
     const ressourceObject = {
+      "_links": {
+          "self": { "href": `/terrains`},
+      },
       "_embedded": {
         "terrains": rows.map(row => hal.mapTerrainToResourceObject(row, req.baseUrl))
       }
@@ -97,6 +100,10 @@ async function (req, res, next) {
     const path = req.path.replace('/creneaux', '');
 
     const ressourceObject = {
+      "_links": {
+        "self": { "href": `/terrains/${req.params.name}/creneaux`},
+        "creneaux": { "href": `/creneaux`},
+    },
       "_embedded": {
         "creneaux": rows.map(row => hal.mapCreneauToResourceObject(row, path))
       }

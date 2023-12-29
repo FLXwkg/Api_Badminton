@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var hal = require('../hal')
-
+var hal = require('../hal');
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {

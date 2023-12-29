@@ -29,6 +29,9 @@ async function (req, res, next) {
     }
 
     const ressourceObject = {
+      "self": { 
+        "href": `/adherents`
+      },
       "_embedded": {
         "adherents": rows.map(row => hal.mapAdherentToResourceObject(row, req.baseUrl))
       }
@@ -62,10 +65,10 @@ async function (req, res, next) {
     }
 
     const ressourceObject = {
-      "_embedded": {
+      "self": { 
+        "href": `/adherents/${req.params.id}`},
         "adherent": hal.mapAdherentToResourceObject(rows[0], req.baseUrl)
-      }
-    };
+      };
 
     res.set('Content-Type', 'application/hal+json');
     res.status(200);
