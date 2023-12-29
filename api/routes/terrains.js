@@ -173,10 +173,18 @@ async function (req, res, next) {
       res.status(404).json({ "msg": "Pseudo non trouvé" });
       return;
     }
+
+    const sql2 = 'SELECT * FROM `reservation` WHERE id_creneau = ?;';
+
+    const [ligne] = await connection.query(sql2, creneauId);
+
+    if (ligne.length != 0) {
+      res.status(404).json({ "msg": "La réservation existe déjà" });
+      return;
+    }
     const sqlpost = 'INSERT INTO `reservation`(id_creneau, id_adherent) VALUES (?, ?);'
 
     await connection.query(sqlpost, [creneauId, row[0].id]);
-  
     connection.release();
     res.json({ "msg": "Réservation ajoutée" });
   } catch (error) {

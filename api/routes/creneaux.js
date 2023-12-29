@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const hal = require('../hal');
-const pool = require('../db'); // Import the db.js file
+const pool = require('../db');
 const validateCreneauId = require('../middlewares/validateCreneauId');
 const validatePseudo = require('../middlewares/validatePseudo');
 const validateDisponible = require('../middlewares/validateDisponible');

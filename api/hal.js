@@ -57,6 +57,8 @@ function mapCreneauSelfToResourceObject(creneauData, baseURL) {
         "Heure de fin": creneauData.heure_fin,
         "Jour": creneauData.jour,
         "disponible": creneauData.creneau_disponible,
+        "Id du terrain": creneauData.id_terrain,
+    
     }
 }
 
@@ -98,4 +100,26 @@ function mapAdherentToResourceObject(adherentData, baseURL) {
     }
 }
 
-module.exports = { halLinkObject, mapTerrainToResourceObject, mapCreneauToResourceObject, mapCreneauSelfToResourceObject, mapAdherentToResourceObject };
+/**
+ * Retourne une représentation Ressource Object (HAL) d'un concert
+ * @param {*} reservationData Données brutes d'un concert
+ * @returns un Ressource Object Concert (spec HAL)
+ */
+function mapReservationToResourceObject(reservationData, baseURL) {
+    return {
+        "_links": [{
+            "self": halLinkObject(baseURL + '/login/reservations' + '/' + reservationData.id_reservation, 'string'),
+        }],
+
+        "Heure de début": reservationData.heure_debut,
+        "Heure de fin": reservationData.heure_fin,
+        "Jour": reservationData.jour,
+        "disponible": reservationData.creneau_disponible,
+        "Nom du terrain": reservationData.nom,
+        "disponible": reservationData.terrain_disponible,
+        "Pseudo de l'adhérent": reservationData.pseudo,
+        "Rôle de l'adhérent": reservationData.role,
+    }
+}
+
+module.exports = { halLinkObject, mapTerrainToResourceObject, mapCreneauToResourceObject, mapCreneauSelfToResourceObject, mapAdherentToResourceObject, mapReservationToResourceObject };
