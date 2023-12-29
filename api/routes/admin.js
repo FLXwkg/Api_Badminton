@@ -5,17 +5,17 @@ var hal = require('../hal');
 const authenticateAdmin = require("../middlewares/authenticateAdmin");
 const validateTerrainName = require('../middlewares/validateTerrainName');
 
-router.post('/login', authenticateAdmin, (req, res) => {
+router.post('/admin', authenticateAdmin, (req, res) => {
     res.send({
       "_links": {
-        "self": hal.halLinkObject('/login'),
-        "Changer la disponibilité d'un terrain": hal.halLinkObject('/login/terrains'),
-        "Voir toutes les réservations": hal.halLinkObject('/login/reservations')
+        "self": hal.halLinkObject('/admin'),
+        "Changer la disponibilité d'un terrain": hal.halLinkObject('/admin/terrains'),
+        "Voir toutes les réservations": hal.halLinkObject('/admin/reservations')
       }
     })
 });
 
-router.get('/login/reservations', 
+router.get('/admin/reservations', 
 authenticateAdmin,
 async function(req, res, next) {
     try {
@@ -37,7 +37,7 @@ async function(req, res, next) {
 
         res.send({
             "_links": {
-                "self": hal.halLinkObject('/login/reservations'),
+                "self": hal.halLinkObject('/admin/reservations'),
             },
             "_embedded": {
                 "reservations": rows.map(row => hal.mapReservationToResourceObject(row, req.baseUrl))
@@ -49,7 +49,7 @@ async function(req, res, next) {
     }
 });
 
-router.get('/login/terrains', 
+router.get('/admin/terrains', 
 authenticateAdmin,
 async function(req, res, next) {
     try {
@@ -68,10 +68,10 @@ async function(req, res, next) {
 
         res.send({
             "_links": {
-                "self": hal.halLinkObject('/login/terrains'),
+                "self": hal.halLinkObject('/admin/terrains'),
             },
             "_embedded": {
-                "terrains": rows.map(row => hal.mapAdminTerrainToResourceObject(row, '/login'))
+                "terrains": rows.map(row => hal.mapAdminTerrainToResourceObject(row, '/admin'))
       }
         });
     } catch (error) {
@@ -80,7 +80,7 @@ async function(req, res, next) {
     }
 });
 
-router.post('/login/terrains/:name/disponible', 
+router.post('/admin/terrains/:name/disponible', 
 authenticateAdmin,
 validateTerrainName,
 async function(req, res, next) {
