@@ -13,23 +13,6 @@ router.get('/', async function (req, res, next) {
     },
     'description' : 'Un système de réservation de terrains de badminton'
   })
-/*
-  try {
-    
-    const [rows] = await conn.execute('SELECT * FROM User');
-
-    const users = rows.map(element => {
-      return {
-        firstName: element.first_name
-      }
-    });
-    res.render('index', { title: 'RESTful web api', 'users': users });
-
-  } catch (error) {
-    console.error('Error connecting: ' + error.stack);
-    res.status(500).json({ "msg": "Nous rencontrons des difficultés, merci de réessayer plus tard." });
-
-  }*/
 });
 
 module.exports = router;
