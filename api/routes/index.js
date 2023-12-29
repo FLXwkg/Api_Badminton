@@ -8,7 +8,8 @@ router.get('/', async function (req, res, next) {
   res.send({
     "_links": {
       "self": hal.halLinkObject('/'),
-      "terrains": hal.halLinkObject('/terrains')
+      "terrains": hal.halLinkObject('/terrains'),
+      "creneaux": hal.halLinkObject('/creneaux')
     },
     'description' : 'Un système de réservation de terrains de badminton'
   })
