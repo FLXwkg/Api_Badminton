@@ -8,6 +8,7 @@ const swaggerFile = require('./swagger_output.json');
 var indexRouter = require('./routes/index');
 var terrainRouter = require('./routes/terrains');
 var creneauRouter = require('./routes/creneaux');
+var adherentRouter = require('./routes/adherents');
 var http = require('http');
 
 var app = express();
@@ -38,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/', terrainRouter);
 app.use('/', creneauRouter);
+app.use('/', adherentRouter);
 
 
 /**

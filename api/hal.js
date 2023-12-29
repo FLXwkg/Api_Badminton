@@ -80,5 +80,20 @@ function mapCreneauSelfToResourceObject(creneauData, baseURL) {
     }
 }
 
+/**
+ * Retourne une représentation Ressource Object (HAL) d'un concert
+ * @param {*} adherentData Données brutes d'un concert
+ * @returns un Ressource Object Concert (spec HAL)
+ */
+function mapAdherentToResourceObject(adherentData, baseURL) {
+    return {
+        "_links": [{
+            "self": halLinkObject(baseURL + '/adherent' + '/' + adherentData.id, 'string'),
+        }],
 
-module.exports = { halLinkObject, mapTerrainToResourceObject, mapCreneauToResourceObject, mapCreneauSelfToResourceObject };
+        "Pseudo": adherentData.pseudo,
+        "role": adherentData.role,
+    }
+}
+
+module.exports = { halLinkObject, mapTerrainToResourceObject, mapCreneauToResourceObject, mapCreneauSelfToResourceObject, mapAdherentToResourceObject };
