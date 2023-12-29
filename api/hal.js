@@ -61,5 +61,24 @@ function mapCreneauToResourceObject(creneauData, baseURL) {
     }
 }
 
+/**
+ * Retourne une représentation Ressource Object (HAL) d'un concert
+ * @param {*} creneauData Données brutes d'un concert
+ * @returns un Ressource Object Concert (spec HAL)
+ */
+function mapCreneauSelfToResourceObject(creneauData, baseURL) {
+    return {
+        "_links": [{
+            "self": halLinkObject(baseURL + '/creneaux' + '/' + creneauData.id, 'string'),
+        }],
 
-module.exports = { halLinkObject, mapTerrainToResourceObject, mapCreneauToResourceObject };
+        "Heure de début": creneauData.heure_debut,
+        "Heure de fin": creneauData.heure_fin,
+        "Jour": creneauData.jour,
+        "disponible": creneauData.disponible,
+        "Id du terrain": creneauData.id_terrain,
+    }
+}
+
+
+module.exports = { halLinkObject, mapTerrainToResourceObject, mapCreneauToResourceObject, mapCreneauSelfToResourceObject };
