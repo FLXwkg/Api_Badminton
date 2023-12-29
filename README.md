@@ -6,7 +6,9 @@ Projet API de Réservation de Terrains de Badminton
 - [Api\_Badminton](#api_badminton)
 - [Table des matières](#table-des-matières)
   - [Lancer le Projet](#lancer-le-projet)
+    - [Lancer la Base de Données](#lancer-la-base-de-données)
     - [Installer les Dépendances](#installer-les-dépendances)
+    - [Lancer l'API](#lancer-lapi)
   - [Conception](#conception)
     - [Routes](#routes)
       - [Terrains](#terrains)
@@ -20,9 +22,29 @@ Projet API de Réservation de Terrains de Badminton
   - [Références](#références)
 ## Lancer le Projet
 
+### Lancer la Base de Données
+
+Installer [Xampp](https://www.apachefriends.org/fr/index.html), puis lancer **apache** et **mysql**
+
+Créer une base sous le nom `reservation_badminton`,
+Puis executer la requête de création de la table qui se trouve dans `init/bdd.sql`.
+
 ### Installer les Dépendances
 
 Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre machine.
+
+Ensuite, dans le répertoire Api_Badminton :
+
+`cd .\api\`
+
+Puis:
+
+`npm install`
+
+### Lancer l'API
+
+Enfin, toujours depuis le dossier **api** :
+`node .\app.js`
 
 ## Conception
 
@@ -32,33 +54,39 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre machine.
 
 - **Ressource :** `/terrains`
 - **URL :** `/terrains`
-- **Méthodes HTTP :** GET, POST
-- **Paramètres d'URL/Variations :** N/A
-- **Commentaires :** Liste des terrains, ajout d'un terrain
+- **Méthodes HTTP :** GET
+- **Paramètres d'URL/Variations :** disponible = 1|0
+- **Commentaires :** Liste des terrains
 
 #### Créneaux
 
 - **Ressource :** `/creneaux`
 - **URL :** `/creneaux`
-- **Méthodes HTTP :** GET, POST, DELETE
-- **Paramètres d'URL/Variations :** N/A
-- **Commentaires :** Liste des créneaux, ajout et suppression
+- **Méthodes HTTP :** GET
+- **Paramètres d'URL/Variations :** disponible = 1|0, pseudo
+- **Commentaires :** Liste des créneaux
 
 #### Adhérents
 
 - **Ressource :** `/adherents`
 - **URL :** `/adherents`
-- **Méthodes HTTP :** GET, POST
-- **Paramètres d'URL/Variations :** N/A
-- **Commentaires :** Liste des adhérents, ajout d'un adhérent
+- **Méthodes HTTP :** GET
+- **Paramètres d'URL/Variations :** disponible = 1|0, pseudo
+- **Commentaires :** Liste des adhérents
 
 #### Réservations
 
-- **Ressource :** `/reservations`
-- **URL :** `/reservations`
+- **Ressource :** `/login/reservations`
+- **URL :** `/login/reservations`
 - **Méthodes HTTP :** GET, POST, DELETE
-- **Paramètres d'URL/Variations :** N/A
-- **Commentaires :** Liste des réservations, ajout et suppression
+- **Paramètres d'URL/Variations :** username,password
+- **Commentaires :** Liste des réservations
+
+- **Ressource :** `/terrains/:nom/creneaux/:id/reservation`
+- **URL :** `/terrains/:nom/creneaux/:id/reservation/:idreservation`
+- **Méthodes HTTP :**  POST, DELETE
+- **Paramètres d'URL/Variations :** pseudo
+- **Commentaires :** Ajout et suppression des réservations
 
 ### Dictionnaire des Données
 
@@ -66,7 +94,6 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre machine.
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
 | Terrains           | id_terrain      | N    | Oui           |        | Identifiant unique du terrain                  |
 | Nom                | nom             | A    | Oui           | 1      | A, B, C, D                                     |
-| Lieu               | lieu            | A    | Oui           | 100    | Lieu du terrain                                |
 | Disponibilité      | disponible      | B    | Oui           |        | true, false                                    |
 
 | Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
@@ -75,6 +102,7 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre machine.
 | Date de début      | debut           | D    | Oui           |        | Date de début(ex: 2023-12-25 20:00:00)         |
 | Date de fin        | fin             | D    | Oui           |        | Date de fin(ex: 2023-12-25 20:45:00)           |
 | Jour               | jour            | A    | Oui           |        | lundi, mardi, mercredi, jeudi, vendredi, samedi|
+| Id du terrain      | id_terrain      | N    | Oui           |        | Identifiant unique du terrain                  |
 
 | Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
@@ -85,44 +113,38 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) installé sur votre machine.
 | Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
 | Réservations       | id_reservation  | N    | Oui           |        | Identifiant unique de la réservation           |
-| Numéro             | numero          | N    | Oui           |        | Numéro de réservation unique pour l'adhérent   |
-| Date et Heure      | date            | D    | Oui           |        | Date et heure de la réservation                |
-| Statut Réservation | statut          | A    | Oui           |        | to_confirm, confirmed, canceled                |
+| Id du créneau      | id_creneau      | N    | Oui           |        | Identifiant unique du créneau                  |
+| Id de l'adhérent   | id_adherent     | N    | Oui           |        | Identifiant unique de l'adhérent               |
 
 
 
 ## Tableau Récapitulatif des Ressources
 
-| Ressource         | URL              | Méthodes HTTP       | Paramètres d'URL/Variations                   | Commentaires                        |
-|-------------------|------------------|---------------------|-----------------------------------------------|------------------------------------|
-| Terrains          | `/terrains`      | GET, POST           | `/{id-terrain}/reservations/{id-reservation}` | Liste des terrains, ajout d'un terrain |
-| Créneaux          | `/creneaux`      | GET, POST, DELETE   | `/{jour}/{heure} `                            | Liste des créneaux, ajout et suppression |
-| Adhérents         | `/adherents`     | GET, POST           | N/A                                           | Liste des adhérents, ajout d'un adhérent |
-| Réservations      | `/reservations`  | GET, POST, DELETE   | N/A                                           | Liste des réservations, ajout et suppression |
+Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
+------------------- | --- | ------------- | --------------------------- | ------------ |
+Liste des Terrains | `/terrains` | GET | disponible, pseudo | Liste des terrains disponibles |
+Détails d'un Terrain | `/terrains/{id-terrain}` | GET | pseudo | Informations détaillées sur un terrain spécifique |
+Liste des Créneaux | `/terrains/{id-terrain}/creneaux` | GET | disponible, pseudo | Liste des créneaux pour un terrain spécifique
+Détails d'un créneau | `/terrains/{id-terrain}/creneaux` | GET | pseudo | Informations détaillées sur un créneau spécifique
+Faire une réservation | `/terrains/{id-terrain}/creneaux/{id_creneau}/reservation` | POST | pseudo | Effectuer une réservation pour un créneau et un terrain spécifique
+Annuler une Réservation | `/terrains/{id-terrain}/creneaux/{id_creneau}/reservation/{id-reservation}` | DELETE | N/A | Annuler une réservation pour un créneau et un terrain spécifique
 
 Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
 ------------------- | --- | ------------- | --------------------------- | ------------ |
-Liste des Terrains | `/terrains` | GET | N/A | Liste des terrains disponibles |
-Détails d'un Terrain | `/terrains/{id-terrain}` | GET | N/A | Informations détaillées sur un terrain spécifique |
-Réserver un Terrain | `/terrains/{id-terrain}/reservations` | POST | N/A | Effectuer une réservation pour un terrain spécifique
-Liste des Réservations d'un Terrain | `/terrains/{id-terrain}/reservations` | GET | N/A | Liste des réservations pour un terrain spécifique
-Annuler une Réservation | `/terrains/{id-terrain}/reservations/{id-reservation}` | DELETE | N/A | Annuler une réservation pour un terrain spécifique
+Liste des Adhérents | `/adherents` | GET | pseudo, disponible | Liste des adhérents |
+Détails d'un Adhérent | `/adherents/{id}` | GET | pseudo | Informations détaillées sur un adhérent |
 
 Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
 ------------------- | --- | ------------- | --------------------------- | ------------ |
-Liste des Adhérents | `/adherents` | GET | N/A | Liste des adhérents |
-Détails d'un Adhérent | `/adherents/{pseudo}` | GET | N/A | Informations détaillées sur un adhérent |
-Liste des Réservations d'un Adhérent | `/adherents/{pseudo}/reservations` | GET | N/A | Liste des réservations d'un adhérent
+Liste des Créneaux | `/creneaux` | GET | pseudo, disponible | Liste des Créneaux |
+Détails d'un Créneau | `/creneaux/{id}` | GET | pseudo | Informations détaillées sur un créneau |
 
 Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
 ------------------- | --- | ------------- | --------------------------- | ------------ |
-Liste des Créneaux | `/creneaux` | GET | N/A | Liste des Créneaux |
-Détails d'un Créneau | `/creneaux/{heure-debut}` | GET | N/A | Informations détaillées sur un créneau |
-Liste des Réservations d'un Créneau | `/creneaux/{heure-debut}/reservations` | GET | N/A | Liste des réservations d'un créneau
-
-Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
-------------------- | --- | ------------- | --------------------------- | ------------ |
-Liste des Réservations | `/reservations` | GET | N/A | Liste des Réservations |
+Connexion à l'espace admin | `/admin` | POST | username, password | Liste des Réservations |
+Liste des Réservations | `/admin/reservations` | GET | username, password | Liste des Réservations |
+Liste des Terrains | `/admin/terrains` | GET | username, password | Liste des Terrains |
+Changer la disponibilité d'un Terrain | `/admin/terrains/{name}/disponible` | POST | username, password | Liste des Terrains |
 
 
 ## Modèle Conceptuel des Données (MCD)
@@ -131,8 +153,12 @@ Liste des Réservations | `/reservations` | GET | N/A | Liste des Réservations 
 
 ## Remarques
 
+- On ne peut pas ajouter de terrains, d'adhérents ou de créneaux.
+- Effectuer une réservation ne supprime pas celle de la semaine d'avant puisqu'il n'y a pas de notion de semaines proprement établi.
+- L'utilisation d'un JwT pourrait aider pour avoir une connexion plus securisée, mais par manque de temps je ne l'ai pas implémenté.
+- Avec plus de temps et de pratique, il est possible de faire une API de gestion de réservations de terrains de badminton sécurisée et simple d'utilisation.
 
 ## Références
 
 - Cours UML de Mr. Barry
-- Cours REST 
+- Cours REST de Mr. Schuhmacher
