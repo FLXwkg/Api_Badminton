@@ -9,6 +9,7 @@ Projet API de Réservation de Terrains de Badminton
     - [Lancer la Base de Données](#lancer-la-base-de-données)
     - [Installer les Dépendances](#installer-les-dépendances)
     - [Lancer l'API](#lancer-lapi)
+    - [Utiliser l'API](#utiliser-lapi)
   - [Conception](#conception)
     - [Routes](#routes)
       - [Terrains](#terrains)
@@ -16,7 +17,15 @@ Projet API de Réservation de Terrains de Badminton
       - [Adhérents](#adhérents)
       - [Réservations](#réservations)
     - [Dictionnaire des Données](#dictionnaire-des-données)
+      - [Table Terrain](#table-terrain)
+      - [Table Creneau](#table-creneau)
+      - [Table Adherent](#table-adherent)
+      - [Table Reservation](#table-reservation)
   - [Tableau Récapitulatif des Ressources](#tableau-récapitulatif-des-ressources)
+    - [Ressource Terrains](#ressource-terrains)
+    - [Ressource Adhérents](#ressource-adhérents)
+    - [Ressource Creneaux](#ressource-creneaux)
+    - [Ressource Admin](#ressource-admin)
   - [Modèle Conceptuel des Données (MCD)](#modèle-conceptuel-des-données-mcd)
   - [Remarques](#remarques)
   - [Références](#références)
@@ -27,7 +36,7 @@ Projet API de Réservation de Terrains de Badminton
 Installer [Xampp](https://www.apachefriends.org/fr/index.html), puis lancer **apache** et **mysql**
 
 Créer une base sous le nom `reservation_badminton`,
-Puis executer la requête de création de la table qui se trouve dans `init/bdd.sql`.
+Puis executer la requête de création de la table qui se trouve dans `init/init.sql`.
 
 ### Installer les Dépendances
 
@@ -45,6 +54,11 @@ Puis:
 
 Enfin, toujours depuis le dossier **api** :
 `node .\app.js`
+
+### Utiliser l'API
+
+Je recommande d'utiliser [Postman](https://www.postman.com/) pour naviguer dans l'API, 
+car il rend le HAL plus agréable à lire et simplifie la gestion des headers HTTP.
 
 ## Conception
 
@@ -78,47 +92,50 @@ Enfin, toujours depuis le dossier **api** :
 
 - **Ressource :** `/login/reservations`
 - **URL :** `/login/reservations`
-- **Méthodes HTTP :** GET, POST, DELETE
+- **Méthodes HTTP :** GET
 - **Paramètres d'URL/Variations :** username,password
 - **Commentaires :** Liste des réservations
 
-- **Ressource :** `/terrains/:nom/creneaux/:id/reservation`
-- **URL :** `/terrains/:nom/creneaux/:id/reservation/:idreservation`
-- **Méthodes HTTP :**  POST, DELETE
-- **Paramètres d'URL/Variations :** pseudo
-- **Commentaires :** Ajout et suppression des réservations
 
 ### Dictionnaire des Données
+#### Table Terrain
 
 | Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
-| Terrains           | id_terrain      | N    | Oui           |        | Identifiant unique du terrain                  |
+| Terrains           | id_terrain      | N    | Oui           | 11     | Identifiant unique du terrain                  |
 | Nom                | nom             | A    | Oui           | 1      | A, B, C, D                                     |
-| Disponibilité      | disponible      | B    | Oui           |        | true, false                                    |
+| Disponibilité      | disponible      | B    | Oui           | 1      | true, false                                    |
+
+#### Table Creneau
 
 | Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
-| Créneaux           | id_creneau      | N    | Oui           |        | Identifiant unique du créneau                  |
+| Créneaux           | id_creneau      | N    | Oui           | 11     | Identifiant unique du créneau                  |
 | Date de début      | debut           | D    | Oui           |        | Date de début(ex: 2023-12-25 20:00:00)         |
 | Date de fin        | fin             | D    | Oui           |        | Date de fin(ex: 2023-12-25 20:45:00)           |
 | Jour               | jour            | A    | Oui           |        | lundi, mardi, mercredi, jeudi, vendredi, samedi|
-| Id du terrain      | id_terrain      | N    | Oui           |        | Identifiant unique du terrain                  |
+| Id du terrain      | id_terrain      | N    | Oui           | 11     | Identifiant unique du terrain                  |
+
+#### Table Adherent
 
 | Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
-| Adhérents          | id_adherent     | N    | Oui           |        | Identifiant unique de l'adhérent               |
+| Adhérents          | id_adherent     | N    | Oui           | 11     | Identifiant unique de l'adhérent               |
 | Pseudo             | pseudo          | A    | Oui           | 50     | Pseudo unique par adhérent                     |
-| Role               | administrateur  | B    | Oui           |        | true, false                                    |
+| Role               | administrateur  | B    | Oui           | 1      | true, false                                    |
+
+#### Table Reservation
 
 | Ressource          | Code            | Type | Obligatoire ? | Taille | Commentaires                                   |
 | ------------------ | --------------- | ---- | ------------- | ------ | ---------------------------------------------- |
-| Réservations       | id_reservation  | N    | Oui           |        | Identifiant unique de la réservation           |
-| Id du créneau      | id_creneau      | N    | Oui           |        | Identifiant unique du créneau                  |
-| Id de l'adhérent   | id_adherent     | N    | Oui           |        | Identifiant unique de l'adhérent               |
+| Réservations       | id_reservation  | N    | Oui           | 11     | Identifiant unique de la réservation           |
+| Id du créneau      | id_creneau      | N    | Oui           | 11     | Identifiant unique du créneau                  |
+| Id de l'adhérent   | id_adherent     | N    | Oui           | 11     | Identifiant unique de l'adhérent               |
 
 
 
 ## Tableau Récapitulatif des Ressources
+### Ressource Terrains
 
 Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
 ------------------- | --- | ------------- | --------------------------- | ------------ |
@@ -129,15 +146,21 @@ Détails d'un créneau | `/terrains/{id-terrain}/creneaux` | GET | pseudo | Info
 Faire une réservation | `/terrains/{id-terrain}/creneaux/{id_creneau}/reservation` | POST | pseudo | Effectuer une réservation pour un créneau et un terrain spécifique
 Annuler une Réservation | `/terrains/{id-terrain}/creneaux/{id_creneau}/reservation/{id-reservation}` | DELETE | N/A | Annuler une réservation pour un créneau et un terrain spécifique
 
+### Ressource Adhérents
+
 Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
 ------------------- | --- | ------------- | --------------------------- | ------------ |
 Liste des Adhérents | `/adherents` | GET | pseudo, disponible | Liste des adhérents |
 Détails d'un Adhérent | `/adherents/{id}` | GET | pseudo | Informations détaillées sur un adhérent |
 
+### Ressource Creneaux
+
 Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
 ------------------- | --- | ------------- | --------------------------- | ------------ |
 Liste des Créneaux | `/creneaux` | GET | pseudo, disponible | Liste des Créneaux |
 Détails d'un Créneau | `/creneaux/{id}` | GET | pseudo | Informations détaillées sur un créneau |
+
+### Ressource Admin
 
 Nom de la ressource | URL | Méthodes HTTP | Paramètres d’URL/Variations | Commentaires |
 ------------------- | --- | ------------- | --------------------------- | ------------ |
@@ -161,4 +184,5 @@ Changer la disponibilité d'un Terrain | `/admin/terrains/{name}/disponible` | P
 ## Références
 
 - Cours UML de Mr. Barry
+- Cours SQL de Mr. Henry
 - Cours REST de Mr. Schuhmacher
