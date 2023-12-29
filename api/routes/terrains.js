@@ -129,7 +129,7 @@ async function (req, res, next) {
     const [rows] = await connection.query(sql, [terrainName, creneauId, disponible]);
 
     if (rows.length === 0) {
-      let errorMsg = disponible === 1 ? "Terrain non trouvé" : "Terrain indisponible";
+      let errorMsg = disponible === 1 ? "Créneau non trouvé" : "Créneau indisponible";
       res.status(404).json({ "msg": errorMsg });
       return;
     }
@@ -163,8 +163,7 @@ async function (req, res, next) {
     const [row] = await connection.query(sql, pseudo);
 
     if (row.length === 0) {
-      let errorMsg = "Pseudo non trouvé";
-      res.status(404).json({ "msg": errorMsg });
+      res.status(404).json({ "msg": "Pseudo non trouvé" });
       return;
     }
     const sqlpost = 'INSERT INTO `reservation`(id_creneau, id_adherent) VALUES (?, ?);'
@@ -172,7 +171,7 @@ async function (req, res, next) {
     await connection.query(sqlpost, [creneauId, row[0].id]);
   
     connection.release();
-    res.json({ "msg": "Reservation added successfully" });
+    res.json({ "msg": "Réservation ajoutée" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ "msg": "Nous rencontrons des difficultés, merci de réessayer plus tard." });
@@ -193,7 +192,7 @@ async function (req, res) {
         const [reservationRows] = await connection.query(checkReservationSql, [reservationId]);
 
         if (reservationRows.length === 0) {
-            res.status(404).json({ "msg": "Reservation not found" });
+            res.status(404).json({ "msg": "Réservation non trouvée" });
             return;
         }
 
@@ -202,7 +201,7 @@ async function (req, res) {
 
         connection.release();
 
-        res.json({ "msg": "Reservation deleted successfully" });
+        res.json({ "msg": "Réservation supprimée" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ "msg": "An error occurred while deleting the reservation" });
