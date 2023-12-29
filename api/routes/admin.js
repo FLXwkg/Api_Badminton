@@ -3,6 +3,7 @@ var router = express.Router();
 const pool = require('../db');
 var hal = require('../hal');
 const authenticateAdmin = require("../middlewares/authenticateAdmin");
+const validateTerrainName = require('../middlewares/validateTerrainName');
 
 router.post('/login', authenticateAdmin, (req, res) => {
     res.send({
@@ -31,7 +32,6 @@ async function(req, res, next) {
           res.status(404).json({ "msg": "Aucune Réservation" });
           return;
         }
-        console.log('rows :>> ', rows);
       
         connection.release();
 
@@ -43,6 +43,73 @@ async function(req, res, next) {
                 "reservations": rows.map(row => hal.mapReservationToResourceObject(row, req.baseUrl))
       }
         });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ "msg": "Nous rencontrons des difficultés, merci de réessayer plus tard." });
+    }
+});
+
+router.get('/login/terrains', 
+authenticateAdmin,
+async function(req, res, next) {
+    try {
+        const connection = await pool.getConnection();
+
+        const sql = 'SELECT * FROM `terrain`'
+
+        const [rows] = await connection.query(sql);
+    
+        if (rows.length === 0) {
+          res.status(404).json({ "msg": "Aucun Terrain" });
+          return;
+        }
+      
+        connection.release();
+
+        res.send({
+            "_links": {
+                "self": hal.halLinkObject('/login/terrains'),
+            },
+            "_embedded": {
+                "terrains": rows.map(row => hal.mapAdminTerrainToResourceObject(row, '/login'))
+      }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ "msg": "Nous rencontrons des difficultés, merci de réessayer plus tard." });
+    }
+});
+
+router.post('/login/terrains/:name/disponible', 
+authenticateAdmin,
+validateTerrainName,
+async function(req, res, next) {
+    try {
+        const terrainName = req.params.name;
+        const connection = await pool.getConnection();
+
+        const sql = 'SELECT disponible FROM `terrain` WHERE nom = ?'
+
+        const [row] = await connection.query(sql, terrainName);
+    
+        if (row.length === 0) {
+          res.status(404).json({ "msg": "Aucun Terrain" });
+          return;
+        }
+        let disponible;
+        if(row[0] === 1){
+            disponible = 0
+        }else {
+
+            disponible = 1
+        }
+        const sql2 = 'UPDATE `terrain` SET disponible = ? WHERE nom = ?'
+      
+        await connection.query(sql2, [disponible, terrainName]);
+        connection.release();
+
+
+        res.json({ "msg": "Disponibilité du terrain modifiée"});
     } catch (error) {
         console.log(error);
         res.status(500).json({ "msg": "Nous rencontrons des difficultés, merci de réessayer plus tard." });

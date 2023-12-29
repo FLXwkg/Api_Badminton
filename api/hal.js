@@ -44,6 +44,23 @@ function mapTerrainToResourceObject(terrainData, baseURL) {
 
 /**
  * Retourne une représentation Ressource Object (HAL) d'un concert
+ * @param {*} terrainData Données brutes d'un concert
+ * @returns un Ressource Object Concert (spec HAL)
+ */
+function mapAdminTerrainToResourceObject(terrainData, baseURL) {
+    return {
+        "_links": [{
+            "self": halLinkObject(baseURL + '/terrains' + '/' + terrainData.nom, 'string'),
+            "Disponibilité d'un terrain": halLinkObject(baseURL + '/terrains/'  + terrainData.nom + '/disponible' , 'string'),
+        }],
+
+        "nom": terrainData.nom,
+        "disponible": terrainData.disponible,
+    }
+}
+
+/**
+ * Retourne une représentation Ressource Object (HAL) d'un concert
  * @param {*} creneauData Données brutes d'un concert
  * @returns un Ressource Object Concert (spec HAL)
  */
@@ -122,4 +139,12 @@ function mapReservationToResourceObject(reservationData, baseURL) {
     }
 }
 
-module.exports = { halLinkObject, mapTerrainToResourceObject, mapCreneauToResourceObject, mapCreneauSelfToResourceObject, mapAdherentToResourceObject, mapReservationToResourceObject };
+module.exports = { 
+    halLinkObject, 
+    mapTerrainToResourceObject, 
+    mapCreneauToResourceObject, 
+    mapCreneauSelfToResourceObject, 
+    mapAdherentToResourceObject, 
+    mapReservationToResourceObject,
+    mapAdminTerrainToResourceObject, 
+};
